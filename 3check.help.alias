@@ -1,7 +1,7 @@
 embed
 <drac2>
 # Define usage information output
-usage_info = """!3check help
+usageInfo = """!3check help
 !3check list
 !3check <skillname> [args...]|Rolls a skill check for your current active character.
 
@@ -10,17 +10,17 @@ __Valid Arguments__
 -dc     <dc>
 -rr     <iterations>
 -take   <10|20>
+
+-phrase <flavor text>
 -title  <title> _note: [name] and [cname] will be replaced automatically_
 -thumb  <thumbnail URL>
--phrase <flavor text>
-
 -f      \\"Field Title|Field Text\\" - see `!help embed` {under construction}
 
 Arguments surrounded in angled brackets (<args>) are mandatory, while those surrounded in square brackets ([args]) are optional. In either case, don\'t include the brackets."""
 
 out = []
 out.append(f'-title "Command usage:"')
-out.append(f'-f "{usage_info}"')
+out.append(f'-f "{usageInfo}"')
 return "\n".join(out)
 </drac2>
 -footer "Avrae 3.5e; Made by siliceous#5311"

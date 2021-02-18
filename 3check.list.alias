@@ -3,48 +3,48 @@ embed
 out = []
 out.append(f'-title "Skill bonuses for {name}"')
 # List of all skills usable untrained
-untrained_skills = ["skillbonus_appraise","skillbonus_balance","skillbonus_bluff","skillbonus_climb","skillbonus_concentration","skillbonus_control_shape","skillbonus_diplomacy","skillbonus_disguise","skillbonus_escape_artist","skillbonus_forgery","skillbonus_gather_information","skillbonus_heal","skillbonus_hide","skillbonus_intimidate","skillbonus_jump","skillbonus_listen","skillbonus_move_silently","skillbonus_ride","skillbonus_search","skillbonus_sense_motive","skillbonus_spot","skillbonus_survival","skillbonus_swim","skillbonus_use_rope","skillbonus_craft_sub_","skillbonus_perform_sub_"]
+untrainedSkills = ["skillbonus_appraise","skillbonus_balance","skillbonus_bluff","skillbonus_climb","skillbonus_concentration","skillbonus_control_shape","skillbonus_diplomacy","skillbonus_disguise","skillbonus_escape_artist","skillbonus_forgery","skillbonus_gather_information","skillbonus_heal","skillbonus_hide","skillbonus_intimidate","skillbonus_jump","skillbonus_listen","skillbonus_move_silently","skillbonus_ride","skillbonus_search","skillbonus_sense_motive","skillbonus_spot","skillbonus_survival","skillbonus_swim","skillbonus_use_rope","skillbonus_craft_sub_","skillbonus_perform_sub_"]
 # Retreive list of all skills that are explicitly set as being trained, because they have a cvar defined with a name of the pattern "skillbonus_*"
-trained_skills = list(character().cvars.keys())
+trainedSkills = list(character().cvars.keys())
 # Combine the two lists and sort
-for cvarname in untrained_skills:
-	if cvarname not in trained_skills:
-		trained_skills.append(cvarname)
-trained_skills.sort()
+for cvarName in untrainedSkills:
+	if cvarName not in trainedSkills:
+		trainedSkills.append(cvarName)
+trainedSkills.sort()
 # Add a field to the embed output for each skill
-for cvarname in trained_skills:
-	if cvarname.startswith("skillbonus_"):
-		skillName = cvarname.replace("skillbonus_", "").replace("_sub_", "(").replace("_"," ")
+for cvarName in trainedSkills:
+	if cvarName.startswith("skillbonus_"):
+		skillName = cvarName.replace("skillbonus_", "").replace("_sub_", "(").replace("_"," ")
 		skillName = (skillName+")") if "(" in skillName else skillName
 		skillName = skillName.title()
-		skillBonus = get(cvarname,None)
+		skillBonus = get(cvarName,None)
 		# Compute bonus for untrained skills as necessary
-		skillBonus = get("intelligenceMod",0) if ((skillBonus is None) and (cvarname == "skillbonus_appraise"))            else skillBonus
-		skillBonus = get("dexterityMod",0)    if ((skillBonus is None) and (cvarname == "skillbonus_balance"))             else skillBonus
-		skillBonus = get("charismaMod",0)     if ((skillBonus is None) and (cvarname == "skillbonus_bluff"))               else skillBonus
-		skillBonus = get("strengthMod",0)     if ((skillBonus is None) and (cvarname == "skillbonus_climb"))               else skillBonus
-		skillBonus = get("constitutionMod",0) if ((skillBonus is None) and (cvarname == "skillbonus_concentration"))       else skillBonus
-		skillBonus = get("wisdomMod",0)       if ((skillBonus is None) and (cvarname == "skillbonus_control_shape"))       else skillBonus
-		skillBonus = get("charismaMod",0)     if ((skillBonus is None) and (cvarname == "skillbonus_diplomacy"))           else skillBonus
-		skillBonus = get("charismaMod",0)     if ((skillBonus is None) and (cvarname == "skillbonus_disguise"))            else skillBonus
-		skillBonus = get("dexterityMod",0)    if ((skillBonus is None) and (cvarname == "skillbonus_escape_artist"))       else skillBonus
-		skillBonus = get("intelligenceMod",0) if ((skillBonus is None) and (cvarname == "skillbonus_forgery"))             else skillBonus
-		skillBonus = get("charismaMod",0)     if ((skillBonus is None) and (cvarname == "skillbonus_gather_information"))  else skillBonus
-		skillBonus = get("wisdomMod",0)       if ((skillBonus is None) and (cvarname == "skillbonus_heal"))                else skillBonus
-		skillBonus = get("dexterityMod",0)    if ((skillBonus is None) and (cvarname == "skillbonus_hide"))                else skillBonus
-		skillBonus = get("charismaMod",0)     if ((skillBonus is None) and (cvarname == "skillbonus_intimidate"))          else skillBonus
-		skillBonus = get("strengthMod",0)     if ((skillBonus is None) and (cvarname == "skillbonus_jump"))                else skillBonus
-		skillBonus = get("wisdomMod",0)       if ((skillBonus is None) and (cvarname == "skillbonus_listen"))              else skillBonus
-		skillBonus = get("dexterityMod",0)    if ((skillBonus is None) and (cvarname == "skillbonus_move_silently"))       else skillBonus
-		skillBonus = get("dexterityMod",0)    if ((skillBonus is None) and (cvarname == "skillbonus_ride"))                else skillBonus
-		skillBonus = get("intelligenceMod",0) if ((skillBonus is None) and (cvarname == "skillbonus_search"))              else skillBonus
-		skillBonus = get("wisdomMod",0)       if ((skillBonus is None) and (cvarname == "skillbonus_sense_motive"))        else skillBonus
-		skillBonus = get("wisdomMod",0)       if ((skillBonus is None) and (cvarname == "skillbonus_spot"))                else skillBonus
-		skillBonus = get("wisdomMod",0)       if ((skillBonus is None) and (cvarname == "skillbonus_survival"))            else skillBonus
-		skillBonus = get("strengthMod",0)     if ((skillBonus is None) and (cvarname == "skillbonus_swim"))                else skillBonus
-		skillBonus = get("dexterityMod",0)    if ((skillBonus is None) and (cvarname == "skillbonus_use_rope"))            else skillBonus
-		skillBonus = get("intelligenceMod",0) if ((skillBonus is None) and cvarname.startswith("skillbonus_craft_sub_"))   else skillBonus
-		skillBonus = get("charismaMod",0)     if ((skillBonus is None) and cvarname.startswith("skillbonus_perform_sub_")) else skillBonus
+		skillBonus = get("intelligenceMod",0) if ((skillBonus is None) and (cvarName == "skillbonus_appraise"))            else skillBonus
+		skillBonus = get("dexterityMod",0)    if ((skillBonus is None) and (cvarName == "skillbonus_balance"))             else skillBonus
+		skillBonus = get("charismaMod",0)     if ((skillBonus is None) and (cvarName == "skillbonus_bluff"))               else skillBonus
+		skillBonus = get("strengthMod",0)     if ((skillBonus is None) and (cvarName == "skillbonus_climb"))               else skillBonus
+		skillBonus = get("constitutionMod",0) if ((skillBonus is None) and (cvarName == "skillbonus_concentration"))       else skillBonus
+		skillBonus = get("wisdomMod",0)       if ((skillBonus is None) and (cvarName == "skillbonus_control_shape"))       else skillBonus
+		skillBonus = get("charismaMod",0)     if ((skillBonus is None) and (cvarName == "skillbonus_diplomacy"))           else skillBonus
+		skillBonus = get("charismaMod",0)     if ((skillBonus is None) and (cvarName == "skillbonus_disguise"))            else skillBonus
+		skillBonus = get("dexterityMod",0)    if ((skillBonus is None) and (cvarName == "skillbonus_escape_artist"))       else skillBonus
+		skillBonus = get("intelligenceMod",0) if ((skillBonus is None) and (cvarName == "skillbonus_forgery"))             else skillBonus
+		skillBonus = get("charismaMod",0)     if ((skillBonus is None) and (cvarName == "skillbonus_gather_information"))  else skillBonus
+		skillBonus = get("wisdomMod",0)       if ((skillBonus is None) and (cvarName == "skillbonus_heal"))                else skillBonus
+		skillBonus = get("dexterityMod",0)    if ((skillBonus is None) and (cvarName == "skillbonus_hide"))                else skillBonus
+		skillBonus = get("charismaMod",0)     if ((skillBonus is None) and (cvarName == "skillbonus_intimidate"))          else skillBonus
+		skillBonus = get("strengthMod",0)     if ((skillBonus is None) and (cvarName == "skillbonus_jump"))                else skillBonus
+		skillBonus = get("wisdomMod",0)       if ((skillBonus is None) and (cvarName == "skillbonus_listen"))              else skillBonus
+		skillBonus = get("dexterityMod",0)    if ((skillBonus is None) and (cvarName == "skillbonus_move_silently"))       else skillBonus
+		skillBonus = get("dexterityMod",0)    if ((skillBonus is None) and (cvarName == "skillbonus_ride"))                else skillBonus
+		skillBonus = get("intelligenceMod",0) if ((skillBonus is None) and (cvarName == "skillbonus_search"))              else skillBonus
+		skillBonus = get("wisdomMod",0)       if ((skillBonus is None) and (cvarName == "skillbonus_sense_motive"))        else skillBonus
+		skillBonus = get("wisdomMod",0)       if ((skillBonus is None) and (cvarName == "skillbonus_spot"))                else skillBonus
+		skillBonus = get("wisdomMod",0)       if ((skillBonus is None) and (cvarName == "skillbonus_survival"))            else skillBonus
+		skillBonus = get("strengthMod",0)     if ((skillBonus is None) and (cvarName == "skillbonus_swim"))                else skillBonus
+		skillBonus = get("dexterityMod",0)    if ((skillBonus is None) and (cvarName == "skillbonus_use_rope"))            else skillBonus
+		skillBonus = get("intelligenceMod",0) if ((skillBonus is None) and cvarName.startswith("skillbonus_craft_sub_"))   else skillBonus
+		skillBonus = get("charismaMod",0)     if ((skillBonus is None) and cvarName.startswith("skillbonus_perform_sub_")) else skillBonus
 		out.append(f'-f "{skillName}|Bonus: {skillBonus}|inline"')
 return "\n".join(out)
 </drac2>

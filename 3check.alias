@@ -67,7 +67,7 @@ embed
 {{x=1}}
 <drac2>
 # Define usage information output
-usage_info = """!3check help
+usageInfo = """!3check help
 !3check list
 !3check <skillname> [args...]|Rolls a skill check for your current active character.
 
@@ -76,10 +76,10 @@ __Valid Arguments__
 -dc     <dc>
 -rr     <iterations>
 -take   <10|20>
+
+-phrase <flavor text>
 -title  <title> _note: [name] and [cname] will be replaced automatically_
 -thumb  <thumbnail URL>
--phrase <flavor text>
-
 -f      \\"Field Title|Field Text\\" - see `!help embed` {under construction}
 
 Arguments surrounded in angled brackets (<args>) are mandatory, while those surrounded in square brackets ([args]) are optional. In either case, don\'t include the brackets."""
@@ -89,7 +89,7 @@ out = []
 # If the skill specified was invalid, not trained, or not as skill that is usable untrained, then output error message.
 if skillBonus is None:
 	out.append(f'-title "Untrained or unrecognized skill: {skillName}"')
-	out.append(f'-f "{usage_info}"')
+	out.append(f'-f "{usageInfo}"')
 	return "\n".join(out)
 
 # At this point, the skill specified is known, and its bonus is known. Calculate check using argument values and display results.
@@ -104,12 +104,19 @@ if title is None:
 else:
 	title = title.replace("[name]", name)
 	title = title.replace("[cname]", skillName)
+	#TODO Replace {[^}]*} with dice rolls
+	#TODO Replace <[^}]*> with get() call results
+	#TODO Replace {{[^}]*}} with get() call results
+title = title + str(len(get("description"," ")))
 if thumb is None:
 	thumb = get("image",None)
 if not (thumb is None):
 	out.append(f'-thumb "{thumb}"')
 out.append(f'-title "{title}"')
 if (rr != 1) and not (phrase is None):
+	#TODO Replace {[^}]*} with dice rolls
+	#TODO Replace <[^}]*> with get() call results
+	#TODO Replace {{[^}]*}} with get() call results
 	out.append(f'-desc "_{phrase}_"')
 	phrase = None
 if phrase is None:
@@ -121,9 +128,9 @@ for i in range(rr):
 	rolli = f'{d20die} + {skillBonus}{(" + "+str(b)) if (b != 0) else ""}'
 	rolli = vroll(rolli)
 	# Unbold nat1 and nat20 rolls because they mean nothing for 3.5e skill checks
-	dice_str = str(rolli.dice).replace("**","")
+	diceStr = str(rolli.dice).replace("**","")
 	result = rolli.total # + skillBonus + b
-	text = (f'-f "Check {x}|{dice_str} = `{result}`{phrase}|inline"')
+	text = (f'-f "Check {x}|{diceStr} = `{result}`{phrase}|inline"')
 	out.append(text)
 	x=x+1
 ####################for extraField in extraFields:
