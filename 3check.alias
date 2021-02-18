@@ -59,7 +59,7 @@ embed
 {{help    = True if (skillName == "") else help}}
 {{b       = arg.last(     "b",  0)}}
 {{dc      = arg.last(    "dc", 10, int)}}
-#{{fields  = arg.get(      "f")}}
+####################{{extraFields  = arg.get(      "f")}}
 {{listcmd = arg.last(  "list")}}
 {{phrase  = arg.last("phrase")}}
 {{rr      = arg.last(    "rr",  1, int)}}
@@ -135,6 +135,7 @@ if skillBonus is None:
 	out.append(f'-title "Untrained or unrecognized skill: {skillName}"')
 	out.append(f'-f "{usage_info}"')
 	return "\n".join(out)
+
 skillBonus = int(skillBonus)
 if title is None:
 	titleverb = f'takes {take} on' if take > 0 else "makes"
@@ -168,8 +169,8 @@ for i in range(rr):
 	text = (f'-f "Check {x}|{dice_str} = `{result}`{phrase}|inline"')
 	out.append(text)
 	x=x+1
-#for field in fields:
-#	out.append(f'-f "a|{1d6}"')
+####################for extraField in extraFields:
+####################	out.append(f'-f "omid|{extraField}"')
 return "\n".join(out)
 </drac2>
 -footer "Avrae 3.5e; Made by siliceous#5311"
