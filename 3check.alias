@@ -69,13 +69,15 @@ embed
 {{title   = arg.last( "title")}}
 {{x=1}}
 <drac2>
-out = []
+# Define usage information output
 usage_info = """
 !3check <skillname> [args...]|Rolls a skill check for your current active character.
 __Valid Arguments__
+-help
+-list
+
 -b      <bonus>
 -dc     <dc>
--list
 -rr     <iterations>
 -take   <10|20>
 -title  <title> _note: [name] and [cname] will be replaced automatically_
@@ -85,24 +87,37 @@ __Valid Arguments__
 -f      \\"Field Title|Field Text\\" - see `!help embed` {under construction}
 
 Arguments surrounded in angled brackets (<args>) are mandatory, while those surrounded in square brackets ([args]) are optional. In either case, don\'t include the brackets."""
+
+out = []
+
+# Detect help argument, which then ignores all other arguments.
 if help:
 	out.append(f'-title "Command usage:"')
 	out.append(f'-f "{usage_info}"')
 	return "\n".join(out)
+# -help
+
+# Detect list argument, which then ignores all other arguments.
+# The list argument displays a list of all usable skills. This includes skills that are trained, and skills that are usable without training.
 if not (listcmd is None):
 	out.append(f'-title "Skill bonuses for {name}"')
+	# List of all skills usable untrained
 	untrained_skills = ["skillbonus_appraise","skillbonus_balance","skillbonus_bluff","skillbonus_climb","skillbonus_concentration","skillbonus_control_shape","skillbonus_diplomacy","skillbonus_disguise","skillbonus_escape_artist","skillbonus_forgery","skillbonus_gather_information","skillbonus_heal","skillbonus_hide","skillbonus_intimidate","skillbonus_jump","skillbonus_listen","skillbonus_move_silently","skillbonus_ride","skillbonus_search","skillbonus_sense_motive","skillbonus_spot","skillbonus_survival","skillbonus_swim","skillbonus_use_rope","skillbonus_craft_sub_","skillbonus_perform_sub_"]
+	# Retreive list of all skills that are explicitly set as being trained, because they have a cvar defined with a name of the pattern "skillbonus_*"
 	trained_skills = list(character().cvars.keys())
+	# Combine the two lists and sort
 	for cvarname in untrained_skills:
 		if cvarname not in trained_skills:
 			trained_skills.append(cvarname)
 	trained_skills.sort()
+	# Add a field to the embed output for each skill
 	for cvarname in trained_skills:
 		if cvarname.startswith("skillbonus_"):
 			skillName = cvarname.replace("skillbonus_", "").replace("_sub_", "(").replace("_"," ")
 			skillName = (skillName+")") if "(" in skillName else skillName
 			skillName = skillName.title()
 			skillBonus = get(cvarname,None)
+			# Compute bonus for untrained skills as necessary
 			skillBonus = get("intelligenceMod",0) if ((skillBonus is None) and (cvarname == "skillbonus_appraise"))            else skillBonus
 			skillBonus = get("dexterityMod",0)    if ((skillBonus is None) and (cvarname == "skillbonus_balance"))             else skillBonus
 			skillBonus = get("charismaMod",0)     if ((skillBonus is None) and (cvarname == "skillbonus_bluff"))               else skillBonus
@@ -131,11 +146,15 @@ if not (listcmd is None):
 			skillBonus = get("charismaMod",0)     if ((skillBonus is None) and cvarname.startswith("skillbonus_perform_sub_")) else skillBonus
 			out.append(f'-f "{skillName}|Bonus: {skillBonus}|inline"')
 	return "\n".join(out)
+# -list
+
+# If the skill specified was invalid, not trained, or not as skill that is usable untrained, then output error message.
 if skillBonus is None:
 	out.append(f'-title "Untrained or unrecognized skill: {skillName}"')
 	out.append(f'-f "{usage_info}"')
 	return "\n".join(out)
 
+# At this point, the skill specified is known, and its bonus is known. Calculate check using argument values and display results.
 skillBonus = int(skillBonus)
 if title is None:
 	titleverb = f'takes {take} on' if take > 0 else "makes"
