@@ -107,7 +107,7 @@ else:
 	#TODO Replace {[^}]*} with dice rolls
 	#TODO Replace <[^}]*> with get() call results
 	#TODO Replace {{[^}]*}} with get() call results
-title = title + str(len(get("description"," ")))
+#title = title + str(len(get("description"," ")))
 if thumb is None:
 	thumb = get("image",None)
 if not (thumb is None):
