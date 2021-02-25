@@ -9,7 +9,7 @@ output = ""
 for cvarName in trainedSkills:
 	if cvarName.startswith("skillbonus_"):
 		skillName = cvarName.replace("skillbonus_", "").replace("_sub_", "(").replace("_"," ")
-		skillName = (skillName+")") if "(" in skillName else skillName
+		skillName = (skillName+")") if ("(" in skillName) else skillName
 		skillName = skillName.title()
 		skillBonus = get(cvarName,None)
 		if (output != ""):

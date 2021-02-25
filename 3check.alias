@@ -6,54 +6,18 @@ embed
 {{skillName = skillName.replace("( ","(")}}
 {{skillName = skillName.replace(" )",")")}}
 {{skillName = skillName.replace(") ",")")}}
-{{skillNameCVar = skillName.replace("(","~").replace(")","").replace(" ","_")}}
+{{skillName = "strength"     if (skillName == "str") else skillName }}
+{{skillName = "dexterity"    if (skillName == "dex") else skillName }}
+{{skillName = "constitution" if (skillName == "con") else skillName }}
+{{skillName = "intelligence" if (skillName == "int") else skillName }}
+{{skillName = "wisdom"       if (skillName == "wis") else skillName }}
+{{skillName = "charisma"     if (skillName == "cha") else skillName }}
+{{skillNameCVar = "skillbonus_"+skillName.replace("(","~").replace(")","").replace(" ","_")}}
 {{skillNameCVar = skillNameCVar.replace("craft_","craft~").replace("knowledge_","knowledge~").replace("perform_","perform~").replace("profession_","profession~")}}
 {{skillNameCVar = skillNameCVar.replace("~","_sub_")}}
-{{skillNameCVar = "skillbonus_"+skillNameCVar}}
 {{skillName = "(".join(skillName.split(" ",1))+")" if (skillName.startswith("craft ") or skillName.startswith("knowledge ") or skillName.startswith("perform ") or skillName.startswith("profession ")) else skillName}}
 {{skillName = skillName.title()}}
-# Figure out the skill bonus. if cvar is missing, use appropriate ability mod for skills that can be used untrained.
 {{skillBonus = get(skillNameCVar,None)}}
-{{skillBonus = get("intelligenceMod",0) if ((skillBonus is None) and (skillNameCVar == "skillbonus_appraise"))            else skillBonus}}
-{{skillBonus = get("dexterityMod",0)    if ((skillBonus is None) and (skillNameCVar == "skillbonus_balance"))             else skillBonus}}
-{{skillBonus = get("charismaMod",0)     if ((skillBonus is None) and (skillNameCVar == "skillbonus_bluff"))               else skillBonus}}
-{{skillBonus = get("strengthMod",0)     if ((skillBonus is None) and (skillNameCVar == "skillbonus_climb"))               else skillBonus}}
-{{skillBonus = get("constitutionMod",0) if ((skillBonus is None) and (skillNameCVar == "skillbonus_concentration"))       else skillBonus}}
-{{skillBonus = get("wisdomMod",0)       if ((skillBonus is None) and (skillNameCVar == "skillbonus_control_shape"))       else skillBonus}}
-{{skillBonus = get("charismaMod",0)     if ((skillBonus is None) and (skillNameCVar == "skillbonus_diplomacy"))           else skillBonus}}
-{{skillBonus = get("charismaMod",0)     if ((skillBonus is None) and (skillNameCVar == "skillbonus_disguise"))            else skillBonus}}
-{{skillBonus = get("dexterityMod",0)    if ((skillBonus is None) and (skillNameCVar == "skillbonus_escape_artist"))       else skillBonus}}
-{{skillBonus = get("intelligenceMod",0) if ((skillBonus is None) and (skillNameCVar == "skillbonus_forgery"))             else skillBonus}}
-{{skillBonus = get("charismaMod",0)     if ((skillBonus is None) and (skillNameCVar == "skillbonus_gather_information"))  else skillBonus}}
-{{skillBonus = get("wisdomMod",0)       if ((skillBonus is None) and (skillNameCVar == "skillbonus_heal"))                else skillBonus}}
-{{skillBonus = get("dexterityMod",0)    if ((skillBonus is None) and (skillNameCVar == "skillbonus_hide"))                else skillBonus}}
-{{skillBonus = get("charismaMod",0)     if ((skillBonus is None) and (skillNameCVar == "skillbonus_intimidate"))          else skillBonus}}
-{{skillBonus = get("strengthMod",0)     if ((skillBonus is None) and (skillNameCVar == "skillbonus_jump"))                else skillBonus}}
-{{skillBonus = get("wisdomMod",0)       if ((skillBonus is None) and (skillNameCVar == "skillbonus_listen"))              else skillBonus}}
-{{skillBonus = get("dexterityMod",0)    if ((skillBonus is None) and (skillNameCVar == "skillbonus_move_silently"))       else skillBonus}}
-{{skillBonus = get("dexterityMod",0)    if ((skillBonus is None) and (skillNameCVar == "skillbonus_ride"))                else skillBonus}}
-{{skillBonus = get("intelligenceMod",0) if ((skillBonus is None) and (skillNameCVar == "skillbonus_search"))              else skillBonus}}
-{{skillBonus = get("wisdomMod",0)       if ((skillBonus is None) and (skillNameCVar == "skillbonus_sense_motive"))        else skillBonus}}
-{{skillBonus = get("wisdomMod",0)       if ((skillBonus is None) and (skillNameCVar == "skillbonus_spot"))                else skillBonus}}
-{{skillBonus = get("wisdomMod",0)       if ((skillBonus is None) and (skillNameCVar == "skillbonus_survival"))            else skillBonus}}
-{{skillBonus = get("strengthMod",0)     if ((skillBonus is None) and (skillNameCVar == "skillbonus_swim"))                else skillBonus}}
-{{skillBonus = get("dexterityMod",0)    if ((skillBonus is None) and (skillNameCVar == "skillbonus_use_rope"))            else skillBonus}}
-{{skillBonus = get("intelligenceMod",0) if ((skillBonus is None) and skillNameCVar.startswith("skillbonus_craft_sub_"))   else skillBonus}}
-{{skillBonus = get("charismaMod",0)     if ((skillBonus is None) and skillNameCVar.startswith("skillbonus_perform_sub_")) else skillBonus}}
-# Also check to see if an straight ability check is being rolled
-{{skillBonus = get("strengthMod",0)     if ((skillBonus is None) and (skillNameCVar == "skillbonus_strength"))            else skillBonus}}
-{{skillBonus = get("strengthMod",0)     if ((skillBonus is None) and (skillNameCVar == "skillbonus_str"))                 else skillBonus}}
-{{skillBonus = get("dexterityMod",0)    if ((skillBonus is None) and (skillNameCVar == "skillbonus_dexterity"))           else skillBonus}}
-{{skillBonus = get("dexterityMod",0)    if ((skillBonus is None) and (skillNameCVar == "skillbonus_dex"))                 else skillBonus}}
-{{skillBonus = get("constitutionMod",0) if ((skillBonus is None) and (skillNameCVar == "skillbonus_constitution"))        else skillBonus}}
-{{skillBonus = get("constitutionMod",0) if ((skillBonus is None) and (skillNameCVar == "skillbonus_con"))                 else skillBonus}}
-{{skillBonus = get("intelligenceMod",0) if ((skillBonus is None) and (skillNameCVar == "skillbonus_intelligence"))        else skillBonus}}
-{{skillBonus = get("intelligenceMod",0) if ((skillBonus is None) and (skillNameCVar == "skillbonus_int"))                 else skillBonus}}
-{{skillBonus = get("wisdomMod",0)       if ((skillBonus is None) and (skillNameCVar == "skillbonus_wisdom"))              else skillBonus}}
-{{skillBonus = get("wisdomMod",0)       if ((skillBonus is None) and (skillNameCVar == "skillbonus_wis"))                 else skillBonus}}
-{{skillBonus = get("charismaMod",0)     if ((skillBonus is None) and (skillNameCVar == "skillbonus_charisma"))            else skillBonus}}
-{{skillBonus = get("charismaMod",0)     if ((skillBonus is None) and (skillNameCVar == "skillbonus_cha"))                 else skillBonus}}
-# Done
 {{arg     = argparse(&ARGS&)}}
 {{b       = arg.last(     "b",  0)}}
 {{dc      = arg.last(    "dc", 10, int)}}
@@ -88,7 +52,7 @@ out = []
 
 # If the skill specified was invalid, not trained, or not as skill that is usable untrained, then output error message.
 if skillBonus is None:
-	out.append(f'-title "Untrained or unrecognized skill: {skillName}"')
+	out.append(f'-title "Untrained or unrecognized skill: {skillName} / {skillNameCVar}"')
 	out.append(f'-f "{usageInfo}"')
 	return "\n".join(out)
 
