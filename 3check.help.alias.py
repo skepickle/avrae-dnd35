@@ -21,6 +21,6 @@ Arguments surrounded in angled brackets (<args>) are mandatory, while those surr
 out = []
 out.append(f'-title "Command usage:"')
 out.append(f'-f "{usageInfo}"')
+out.append(f'-footer "Avrae 3.5e; Made by siliceous#5311"')
 return "\n".join(out)
 </drac2>
--footer "Avrae 3.5e; Made by siliceous#5311"

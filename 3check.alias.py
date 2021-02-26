@@ -20,8 +20,8 @@ embed
 {{skillBonus = get(skillNameCVar,None)}}
 {{arg     = argparse(&ARGS&)}}
 {{b       = arg.last(     "b",  0)}}
-{{dc      = arg.last(    "dc", 10, int)}}
-####################{{extraFields  = arg.get(      "f")}}
+{{dc      = arg.last(    "dc", 10, int)}}       #TODO
+#TODO	{{extraFields  = arg.get(      "f")}}
 {{phrase  = arg.last("phrase")}}
 {{rr      = arg.last(    "rr",  1, int)}}
 {{rr      = 25 if (rr > 25) else rr}}
@@ -48,57 +48,65 @@ __Valid Arguments__
 
 Arguments surrounded in angled brackets (<args>) are mandatory, while those surrounded in square brackets ([args]) are optional. In either case, don\'t include the brackets."""
 
+error = False
 out = []
+footers = []
 
 # If the skill specified was invalid, not trained, or not as skill that is usable untrained, then output error message.
 if skillBonus is None:
 	out.append(f'-title "Untrained or unrecognized skill: {skillName} / {skillNameCVar}"')
 	out.append(f'-f "{usageInfo}"')
+	error = True
 	return "\n".join(out)
 
+#TODO Should we check value of {take} before proceeding? must be in [0,10,20] right?
+
 # At this point, the skill specified is known, and its bonus is known. Calculate check using argument values and display results.
-skillBonus = int(skillBonus)
-if title is None:
-	titleverb = f'takes {take} on' if take > 0 else "makes"
-	titleskillNameArticle = "an" if (skillName.startswith("A") or skillName.startswith("E") or skillName.startswith("I") or skillName.startswith("O")) else "a"
-	numberWords = ["", "one","two","three","four", "five", "six","seven","eight","nine","ten","eleven","twelve", "thirteen", "fourteen", "fifteen","sixteen","seventeen", "eighteen","nineteen","twenty","twenty one", "twenty two", "twenty three", "twenty four", "twenty five"]
-	titleskillNameArticle = numberWords[rr] if rr > 1 else titleskillNameArticle
-	titlecheck = "checks" if rr > 1 else "check"
-	title = f'{name} {titleverb} {titleskillNameArticle} {skillName} {titlecheck}!'
-else:
-	title = title.replace("[name]", name)
-	title = title.replace("[cname]", skillName)
-	#TODO Replace {[^}]*} with dice rolls
-	#TODO Replace <[^}]*> with get() call results
-	#TODO Replace {{[^}]*}} with get() call results
-#title = title + str(len(get("description"," ")))
-if thumb is None:
-	thumb = get("image",None)
-if not (thumb is None):
-	out.append(f'-thumb "{thumb}"')
-out.append(f'-title "{title}"')
-if (rr != 1) and not (phrase is None):
-	#TODO Replace {[^}]*} with dice rolls
-	#TODO Replace <[^}]*> with get() call results
-	#TODO Replace {{[^}]*}} with get() call results
-	out.append(f'-desc "_{phrase}_"')
-	phrase = None
-if phrase is None:
-	phrase = ""
-else:
-	phrase = "\n_"+phrase+"_"
-for i in range(rr):
-	d20die = str(take) if take > 0 else "1d20"
-	rolli = f'{d20die} + {skillBonus}{(" + "+str(b)) if (b != 0) else ""}'
-	rolli = vroll(rolli)
-	# Unbold nat1 and nat20 rolls because they mean nothing for 3.5e skill checks
-	diceStr = str(rolli.dice).replace("**","")
-	result = rolli.total # + skillBonus + b
-	text = (f'-f "Check {x}|{diceStr} = `{result}`{phrase}|inline"')
-	out.append(text)
-	x=x+1
-####################for extraField in extraFields:
-####################	out.append(f'-f "omid|{extraField}"')
+if (not error):
+	skillBonus = int(skillBonus)
+	if title is None:
+		titleverb = f'takes {take} on' if take > 0 else "makes"
+		titleskillNameArticle = "an" if (skillName.startswith("A") or skillName.startswith("E") or skillName.startswith("I") or skillName.startswith("O")) else "a"
+		numberWords = ["", "one","two","three","four", "five", "six","seven","eight","nine","ten","eleven","twelve", "thirteen", "fourteen", "fifteen","sixteen","seventeen", "eighteen","nineteen","twenty","twenty one", "twenty two", "twenty three", "twenty four", "twenty five"]
+		titleskillNameArticle = numberWords[rr] if rr > 1 else titleskillNameArticle
+		titlecheck = "checks" if rr > 1 else "check"
+		title = f'{name} {titleverb} {titleskillNameArticle} {skillName} {titlecheck}!'
+	else:
+		title = title.replace("[name]", name)
+		title = title.replace("[cname]", skillName)
+		#TODO Replace {[^}]*} with dice rolls
+		#TODO Replace <[^}]*> with get() call results
+		#TODO Replace {{[^}]*}} with get() call results
+	#title = title + str(len(get("description"," ")))
+	if thumb is None:
+		thumb = get("image",None)
+	if not (thumb is None):
+		out.append(f'-thumb "{thumb}"')
+	out.append(f'-title "{title}"')
+	if (rr != 1) and not (phrase is None):
+		#TODO Replace {[^}]*} with dice rolls
+		#TODO Replace <[^}]*> with get() call results
+		#TODO Replace {{[^}]*}} with get() call results
+		out.append(f'-desc "_{phrase}_"')
+		phrase = None
+	if phrase is None:
+		phrase = ""
+	else:
+		phrase = "\n_"+phrase+"_"
+	for i in range(rr):
+		d20die = str(take) if take > 0 else "1d20"
+		rolli = f'{d20die} + {skillBonus}{(" + "+str(b)) if (b != 0) else ""}'
+		rolli = vroll(rolli)
+		# Unbold nat1 and nat20 rolls because they mean nothing for 3.5e skill checks
+		diceStr = str(rolli.dice).replace("**","")
+		result = rolli.total
+		text = (f'-f "Check {x}|{diceStr} = `{result}`{phrase}|inline"')
+		out.append(text)
+		x=x+1
+	#TODO	for extraField in extraFields:
+	#TODO		out.append(f'-f "omid|{extraField}"')
+footers.append("Avrae 3.5e; Made by siliceous#5311")
+footer = "\n".join(footers)
+out.append(f'-footer "{footer}"')
 return "\n".join(out)
 </drac2>
--footer "Avrae 3.5e; Made by siliceous#5311"

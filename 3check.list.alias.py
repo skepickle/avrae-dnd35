@@ -16,6 +16,6 @@ for cvarName in trainedSkills:
 			output = output + "\n"
 		output = output + f'    {skillName}: {skillBonus}'
 out.append(f'-f "Skill Bonuses|{output}"')
+out.append(f'-footer "Avrae 3.5e; Made by siliceous#5311"')
 return "\n".join(out)
 </drac2>
--footer "Avrae 3.5e; Made by siliceous#5311"
