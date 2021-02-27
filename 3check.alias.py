@@ -58,7 +58,7 @@ if checkBonus is None:
 	out.append(f'-f "{usageInfo}"')
 	error = True
 
-if (not error) and not (take > 20):
+if (not error) and (take > 20):
 	out.append(f'-title "Cannot take-{take} when doing a check."')
 	out.append(f'-f "{usageInfo}"')
 	error = True
