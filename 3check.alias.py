@@ -20,7 +20,7 @@ embed
 {{skillBonus = get(skillNameCVar,None)}}
 {{arg     = argparse(&ARGS&)}}
 {{b       = arg.last(     "b",  0)}}
-{{dc      = arg.last(    "dc", 10, int)}}       #TODO
+{{dc      = arg.last(    "dc", None, int)}}
 #TODO	{{extraFields  = arg.get(      "f")}}
 {{phrase  = arg.last("phrase")}}
 {{rr      = arg.last(    "rr",  1, int)}}
@@ -85,17 +85,37 @@ if (not error):
 		#TODO Replace {{[^}]*}} with get() call results
 	out.append(f'-title "{title}"')
 
-	if (rr > 1) and not (phrase is None):
-		#TODO Replace {[^}]*} with dice rolls
-		#TODO Replace <[^}]*> with get() call results
-		#TODO Replace {{[^}]*}} with get() call results
-		out.append(f'-desc "_{phrase}_"')
-		phrase = None
-	if phrase is None:
-		phrase = ""
-	else:
-		phrase = "\n_"+phrase+"_"
+	dc_val = None
+	if (rr > 1):
+		#TODO Replace in phrase: {[^}]*} with dice rolls
+		#TODO Replace in phrase: <[^}]*> with get() call results
+		#TODO Replace in phrase: {{[^}]*}} with get() call results
+		if (not (phrase is None)) and (not (dc is None)):
+			out.append(f'-desc "**DC {dc}**\n_{phrase}_"')
+			phrase = None
+			dc_val = dc
+			dc = None
+		elif not (phrase is None):
+			out.append(f'-desc "_{phrase}_"')
+			phrase = None
+		elif not (dc is None):
+			out.append(f'-desc "**DC {dc}**"')
+			dc_val = dc
+			dc = None
 
+	if phrase is None:
+		phrase_str = ""
+	else:
+		phrase_str = "\n_"+phrase+"_"
+
+	if dc is None:
+		dc = ""
+	else:
+		dc_val = dc
+		dc = "**DC "+dc+"**\n"
+
+	count_success = 0
+	count_failure = 0
 	for i in range(rr):
 		d20die = str(take) if take > 0 else "1d20"
 		rolli = f'{d20die} + {skillBonus}{(" + "+str(b)) if (b != 0) else ""}'
@@ -103,12 +123,25 @@ if (not error):
 		# Unbold nat1 and nat20 rolls because they mean nothing for 3.5e skill checks
 		diceStr = str(rolli.dice).replace("**","")
 		result = rolli.total
+		if not (dc_val is None):
+			if (result >= dc_val):
+				count_success += 1
+			else:
+				count_failure += 1
 		if (rr <= 1):
-			text = f'-desc "{diceStr} = `{result}`{phrase}"'
+			text = f'-desc "{dc}{diceStr} = `{result}`{phrase_str}"'
 		else:
-			text = f'-f "Check {x}|{diceStr} = `{result}`{phrase}|inline"'
+			text = f'-f "Check {x}|{diceStr} = `{result}`|inline"'
 		out.append(text)
-		x=x+1
+		x+=1
+	if not (dc_val is None):
+		if (count_success+count_failure) == 1:
+			if count_success == 1:
+				footers.append("Success!\n")
+			else:
+				footers.append("Failure!\n")
+		else:
+			footers.append(f'{count_success} Successes | {count_failure} Failures\n')
 	#TODO	for extraField in extraFields:
 	#TODO		out.append(f'-f "omid|{extraField}"')
 
