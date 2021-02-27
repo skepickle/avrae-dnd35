@@ -3,7 +3,7 @@ embed
 # Define usage information output
 usageInfo = """!3check help
 !3check list
-!3check <skillname> [args...]|Rolls a skill check for your current active character.
+!3check <checkname> [args...]|Rolls a check for your current active character.
 
 __Valid Arguments__
 -b      <bonus>

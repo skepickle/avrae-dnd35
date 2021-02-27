@@ -1,23 +1,23 @@
 embed
-# Figure out the skill name and cvar variable name.
-{{skillName = " ".join(" ".join(&ARGS&).split(" -",1)[0].split())}}
-{{skillName = skillName.lower()}}
-{{skillName = skillName.replace(" (","(")}}
-{{skillName = skillName.replace("( ","(")}}
-{{skillName = skillName.replace(" )",")")}}
-{{skillName = skillName.replace(") ",")")}}
-{{skillName = "strength"     if (skillName == "str") else skillName }}
-{{skillName = "dexterity"    if (skillName == "dex") else skillName }}
-{{skillName = "constitution" if (skillName == "con") else skillName }}
-{{skillName = "intelligence" if (skillName == "int") else skillName }}
-{{skillName = "wisdom"       if (skillName == "wis") else skillName }}
-{{skillName = "charisma"     if (skillName == "cha") else skillName }}
-{{skillNameCVar = "skillbonus_"+skillName.replace("(","~").replace(")","").replace(" ","_")}}
-{{skillNameCVar = skillNameCVar.replace("craft_","craft~").replace("knowledge_","knowledge~").replace("perform_","perform~").replace("profession_","profession~")}}
-{{skillNameCVar = skillNameCVar.replace("~","_sub_")}}
-{{skillName = "(".join(skillName.split(" ",1))+")" if (skillName.startswith("craft ") or skillName.startswith("knowledge ") or skillName.startswith("perform ") or skillName.startswith("profession ")) else skillName}}
-{{skillName = skillName.title()}}
-{{skillBonus = get(skillNameCVar,None)}}
+# Figure out the check name and cvar variable name.
+{{checkName = " ".join(" ".join(&ARGS&).split(" -",1)[0].split())}}
+{{checkName = checkName.lower()}}
+{{checkName = checkName.replace(" (","(")}}
+{{checkName = checkName.replace("( ","(")}}
+{{checkName = checkName.replace(" )",")")}}
+{{checkName = checkName.replace(") ",")")}}
+{{checkName = "strength"     if (checkName == "str") else checkName }}
+{{checkName = "dexterity"    if (checkName == "dex") else checkName }}
+{{checkName = "constitution" if (checkName == "con") else checkName }}
+{{checkName = "intelligence" if (checkName == "int") else checkName }}
+{{checkName = "wisdom"       if (checkName == "wis") else checkName }}
+{{checkName = "charisma"     if (checkName == "cha") else checkName }}
+{{checkNameCVar = "checkbonus_"+checkName.replace("(","~").replace(")","").replace(" ","_")}}
+{{checkNameCVar = checkNameCVar.replace("craft_","craft~").replace("knowledge_","knowledge~").replace("perform_","perform~").replace("profession_","profession~")}}
+{{checkNameCVar = checkNameCVar.replace("~","_sub_")}}
+{{checkName = "(".join(checkName.split(" ",1))+")" if (checkName.startswith("craft ") or checkName.startswith("knowledge ") or checkName.startswith("perform ") or checkName.startswith("profession ")) else checkName}}
+{{checkName = checkName.title()}}
+{{checkBonus = get(checkNameCVar,None)}}
 {{arg     = argparse(&ARGS&)}}
 {{b       = arg.last(     "b",  0)}}
 {{dc      = arg.last(    "dc", None, int)}}
@@ -33,7 +33,7 @@ embed
 # Define usage information output
 usageInfo = """!3check help
 !3check list
-!3check <skillname> [args...]|Rolls a skill check for your current active character.
+!3check <checkname> [args...]|Rolls a check for your current active character.
 
 __Valid Arguments__
 -b      <bonus>
@@ -52,20 +52,20 @@ error = False
 out = []
 footers = []
 
-# If the skill specified was invalid, not trained, or not as skill that is usable untrained, then output error message.
-if skillBonus is None:
-	out.append(f'-title "Untrained or unrecognized skill: {skillName}"')
+# If the check specified was invalid, not trained, or not as check that is usable untrained, then output error message.
+if checkBonus is None:
+	out.append(f'-title "Untrained or unrecognized check: {checkName}"')
 	out.append(f'-f "{usageInfo}"')
 	error = True
 
-if (not error) and not (take in [0,10,20]):
-	out.append(f'-title "Cannot take-{take} when doing a skill check."')
+if (not error) and not (take > 20):
+	out.append(f'-title "Cannot take-{take} when doing a check."')
 	out.append(f'-f "{usageInfo}"')
 	error = True
 
-# At this point, the skill specified is known, and its bonus is known. Calculate check using argument values and display results.
+# At this point, the check specified is known, and its bonus is known. Calculate check using argument values and display results.
 if (not error):
-	skillBonus = int(skillBonus)
+	checkBonus = int(checkBonus)
 	# Construct -thumb
 	if thumb is None:
 		thumb = get("image",None)
@@ -74,14 +74,14 @@ if (not error):
 	# Construct -title
 	if title is None:
 		titleverb = f'takes {take} on' if take > 0 else "makes"
-		titleskillNameArticle = "an" if (skillName.startswith("A") or skillName.startswith("E") or skillName.startswith("I") or skillName.startswith("O")) else "a"
+		titleCheckNameArticle = "an" if (checkName.startswith("A") or checkName.startswith("E") or checkName.startswith("I") or checkName.startswith("O")) else "a"
 		numberWords = ["", "one","two","three","four", "five", "six","seven","eight","nine","ten","eleven","twelve", "thirteen", "fourteen", "fifteen","sixteen","seventeen", "eighteen","nineteen","twenty","twenty one", "twenty two", "twenty three", "twenty four", "twenty five"]
-		titleskillNameArticle = numberWords[rr] if rr > 1 else titleskillNameArticle
-		titlecheck = "checks" if rr > 1 else "check"
-		title = f'{name} {titleverb} {titleskillNameArticle} {skillName} {titlecheck}!'
+		titleCheckNameArticle = numberWords[rr] if rr > 1 else titleCheckNameArticle
+		titleCheck = "checks" if rr > 1 else "check"
+		title = f'{name} {titleverb} {titleCheckNameArticle} {checkName} {titleCheck}!'
 	else:
 		title = title.replace("[name]", name)
-		title = title.replace("[cname]", skillName)
+		title = title.replace("[cname]", checkName)
 		#TODO Replace in title: {[^}]*} with dice rolls
 		#TODO Replace in title: <[^}]*> with get() call results
 		#TODO Replace in title: {{[^}]*}} with get() call results
@@ -122,9 +122,9 @@ if (not error):
 	count_failure = 0
 	for i in range(rr):
 		d20die = str(take) if take > 0 else "1d20"
-		rolli = f'{d20die} + {skillBonus}{(" + "+str(b)) if (b != 0) else ""}'
+		rolli = f'{d20die} + {checkBonus}{(" + "+str(b)) if (b != 0) else ""}'
 		rolli = vroll(rolli)
-		# Unbold nat1 and nat20 rolls because they mean nothing for 3.5e skill checks
+		# Unbold nat1 and nat20 rolls because they mean nothing for 3.5e checks
 		diceStr = str(rolli.dice).replace("**","")
 		result = rolli.total
 		if not (dc_val is None):
