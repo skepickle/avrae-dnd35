@@ -114,6 +114,7 @@ if (not error):
 		diceStr = str(rolli.dice)
 		result = rolli.total
 		if not (dc_val is None):
+			# Nat1 and Nat20 are failure and success, respectively, for saving throws!
 			if (rolli.full.startswith("1d20 (**20**)")):
 				count_success += 1
 			elif (rolli.full.startswith("1d20 (**1**)")):
