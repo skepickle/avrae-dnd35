@@ -6,12 +6,13 @@ embed
 {{checkName = checkName.replace("( ","(")}}
 {{checkName = checkName.replace(" )",")")}}
 {{checkName = checkName.replace(") ",")")}}
-{{checkName = "strength"     if (checkName == "str") else checkName }}
-{{checkName = "dexterity"    if (checkName == "dex") else checkName }}
-{{checkName = "constitution" if (checkName == "con") else checkName }}
-{{checkName = "intelligence" if (checkName == "int") else checkName }}
-{{checkName = "wisdom"       if (checkName == "wis") else checkName }}
-{{checkName = "charisma"     if (checkName == "cha") else checkName }}
+{{checkName = "strength"     if (checkName == "str")  else checkName }}
+{{checkName = "dexterity"    if (checkName == "dex")  else checkName }}
+{{checkName = "constitution" if (checkName == "con")  else checkName }}
+{{checkName = "intelligence" if (checkName == "int")  else checkName }}
+{{checkName = "wisdom"       if (checkName == "wis")  else checkName }}
+{{checkName = "charisma"     if (checkName == "cha")  else checkName }}
+{{checkName = "initiative"   if (checkName == "init") else checkName }}
 {{checkNameCVar = "checkbonus_"+checkName.replace("(","~").replace(")","").replace(" ","_")}}
 {{checkNameCVar = checkNameCVar.replace("craft_","craft~").replace("knowledge_","knowledge~").replace("perform_","perform~").replace("profession_","profession~")}}
 {{checkNameCVar = checkNameCVar.replace("~","_sub_")}}
