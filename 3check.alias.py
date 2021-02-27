@@ -66,10 +66,12 @@ if (not error) and not (take in [0,10,20]):
 # At this point, the skill specified is known, and its bonus is known. Calculate check using argument values and display results.
 if (not error):
 	skillBonus = int(skillBonus)
+	# Construct -thumb
 	if thumb is None:
 		thumb = get("image",None)
 	if not (thumb is None):
 		out.append(f'-thumb "{thumb}"')
+	# Construct -title
 	if title is None:
 		titleverb = f'takes {take} on' if take > 0 else "makes"
 		titleskillNameArticle = "an" if (skillName.startswith("A") or skillName.startswith("E") or skillName.startswith("I") or skillName.startswith("O")) else "a"
@@ -80,11 +82,12 @@ if (not error):
 	else:
 		title = title.replace("[name]", name)
 		title = title.replace("[cname]", skillName)
-		#TODO Replace {[^}]*} with dice rolls
-		#TODO Replace <[^}]*> with get() call results
-		#TODO Replace {{[^}]*}} with get() call results
+		#TODO Replace in title: {[^}]*} with dice rolls
+		#TODO Replace in title: <[^}]*> with get() call results
+		#TODO Replace in title: {{[^}]*}} with get() call results
 	out.append(f'-title "{title}"')
 
+	# Process -dc and -phrase
 	dc_val = None
 	if (rr > 1):
 		#TODO Replace in phrase: {[^}]*} with dice rolls
@@ -114,6 +117,7 @@ if (not error):
 		dc_val = dc
 		dc = "**DC "+dc+"**\n"
 
+	# Execute checks
 	count_success = 0
 	count_failure = 0
 	for i in range(rr):
@@ -134,6 +138,8 @@ if (not error):
 			text = f'-f "Check {x}|{diceStr} = `{result}`|inline"'
 		out.append(text)
 		x+=1
+
+	# Report DC summary in footer
 	if not (dc_val is None):
 		if (count_success+count_failure) == 1:
 			if count_success == 1:
